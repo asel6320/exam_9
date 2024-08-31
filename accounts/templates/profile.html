@@ -1,83 +1,136 @@
 {% extends "base.html" %}
 
-{% block title %}{{ user_profile.username }}'s Profile{% endblock %}
+{% block title %}{{ user.first_name }} {{ user.last_name }}'s Profile{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>{{ user_profile.first_name }} {{ user_profile.last_name }}</h1>
-    
-    {% if is_own_profile %}
-        <h2>Your Private Albums</h2>
-        <div class="row">
-            {% for album in private_albums %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="card">
-                        <a href="{% url 'webapp:album_view' album.pk %}">{{ album.title }}</a>
-                    </div>
-                </div>
-            {% empty %}
-                <div class="col-12">
-                    <p>No private albums.</p>
-                </div>
-            {% endfor %}
-        </div>
+    <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
-        <h2>Your Private Photos (Not in Albums)</h2>
-        <div class="row">
-            {% for photo in private_photos_no_album %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="card">
-                        <a href="{% url 'webapp:photo_view' photo.pk %}">
-                            <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
-                        </a>
-                        <div class="card-body">
-                            <p class="card-text">{{ photo.caption }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% empty %}
-                <div class="col-12">
-                    <p>No private photos.</p>
-                </div>
-            {% endfor %}
+    {% if user == request.user %}
+        <div class="mb-3">
+            <a href="{% url 'accounts:profile' user.pk %}?next={{ request.path }}" class="btn btn-primary">Edit Profile</a>
+            <a href="{% url 'webapp:favorites' %}" class="btn btn-secondary">View Favorites</a>
         </div>
-
-        <a href="#" class="btn btn-primary">View Favorites</a>
     {% endif %}
 
     <h2>Public Albums</h2>
     <div class="row">
         {% for album in public_albums %}
-                <div class="card">
-                    <div class="card-body">
-                        <a href="{% url 'webapp:album_view' album.pk %}">{{ album.title }}</a>
-                    </div>
-            {% empty %}
-                <div class="col-12">
-                    <p>No public albums.</p>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <h2>Public Photos (Not in Albums)</h2>
-    <div class="row">
-        {% for photo in public_photos_no_album %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card">
-                    <a href="{% url 'webapp:photo_view' photo.pk %}">
-                        <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
-                    </a>
+
                     <div class="card-body">
-                        <p class="card-text">{{ photo.caption }}</p>
+                        <h5 class="card-title">{{ album.title }}</h5>
+                        <p class="card-text">{{ album.description|slice:":100" }}{% if album.description|length > 100 %}...{% endif %}</p>
+                        <a href="{% url 'webapp:album_view' album.pk %}" class="btn btn-primary">View Album</a>
                     </div>
                 </div>
             </div>
         {% empty %}
             <div class="col-12">
-                <p>No public photos.</p>
+                <h2>No public albums available.</h2>
             </div>
         {% endfor %}
     </div>
+
+    <h2>Public Photos</h2>
+    <div class="row">
+        {% for photo in public_photos %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
+                    <div class="card-body">
+                        <p class="card-text">{{ photo.caption|slice:":100" }}{% if photo.caption|length > 100 %}...{% endif %}</p>
+                        <a href="{% url 'webapp:photo_view' photo.pk %}" class="btn btn-primary">View Photo</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <h2>No public photos available.</h2>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if user == request.user %}
+        <h2>Private Albums</h2>
+        <div class="row">
+            {% for album in private_albums %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ album.title }}</h5>
+                            <p class="card-text">{{ album.description|slice:":100" }}{% if album.description|length > 100 %}...{% endif %}</p>
+                            <a href="{% url 'webapp:album_view' album.pk %}" class="btn btn-primary">View Album</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <h2>No private albums available.</h2>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2>Private Photos</h2>
+        <div class="row">
+            {% for photo in private_photos %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
+                        <div class="card-body">
+                            <p class="card-text">{{ photo.caption|slice:":100" }}{% if photo.caption|length > 100 %}...{% endif %}</p>
+                            <a href="{% url 'webapp:photo_view' photo.pk %}" class="btn btn-primary">View Photo</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <h2>No private photos available.</h2>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if user == request.user %}
+        <h2>Favorites</h2>
+        <h3>Favorite Albums</h3>
+        <div class="row">
+            {% for album in favorites.albums %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ album.title }}</h5>
+                            <p class="card-text">{{ album.description|slice:":100" }}{% if album.description|length > 100 %}...{% endif %}</p>
+                            <a href="{% url 'webapp:album_view' album.pk %}" class="btn btn-primary">View Album</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <h2>No favorite albums.</h2>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h3>Favorite Photos</h3>
+        <div class="row">
+            {% for photo in favorites.photos %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
+                        <div class="card-body">
+                            <p class="card-text">{{ photo.caption|slice:":100" }}{% if photo.caption|length > 100 %}...{% endif %}</p>
+                            <a href="{% url 'webapp:photo_view' photo.pk %}" class="btn btn-primary">View Photo</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <h2>No favorite photos.</h2>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

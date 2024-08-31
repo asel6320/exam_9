@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from webapp.forms import PhotoForm
-from webapp.models import Photo
+from webapp.models import Photo, Album
 
 
 class PhotosListView(ListView):
@@ -70,3 +70,24 @@ class TokenPhotoDetailView(View):
     def get(self, request, token):
         photo = get_object_or_404(Photo, token=token)
         return render(request, 'photos/photo_view.html', {'photo': photo})
+
+
+class FavoritesView(LoginRequiredMixin, ListView):
+    template_name = 'favorites.html'  # Path to your template
+    context_object_name = 'favorites'  # Name for the context in the template
+
+    def get_queryset(self):
+        user = self.request.user
+        favorite_photos = user.favorite_photos.all()
+        favorite_albums = user.favorite_albums.all()
+
+        return {
+            'photos': favorite_photos,
+            'albums': favorite_albums
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['photos'] = self.get_queryset().get('photos', [])
+        context['albums'] = self.get_queryset().get('albums', [])
+        return context

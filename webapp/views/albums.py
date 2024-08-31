@@ -64,3 +64,6 @@ class AlbumDeleteView(PermissionRequiredMixin, DeleteView):
         # Delete all photos in the album
         album.album_photos.all().delete()
         return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('accounts:profile', kwargs={'pk': self.request.user.pk})
