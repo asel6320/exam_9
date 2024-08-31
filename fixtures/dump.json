@@ -1,0 +1,103 @@
+[
+{
+  "model": "webapp.photo",
+  "pk": 7,
+  "fields": {
+    "created_at": "2024-08-31T12:28:46.816Z",
+    "updated_at": "2024-08-31T12:28:46.816Z",
+    "image": "photos/IMG_5650.jpg",
+    "caption": "Origin2",
+    "author": 1,
+    "album": 3,
+    "is_public": true,
+    "token": "06a3317a-27d3-487c-93a7-1314840d2870",
+    "favorite_users": [
+      1
+    ]
+  }
+},
+{
+  "model": "webapp.photo",
+  "pk": 8,
+  "fields": {
+    "created_at": "2024-08-31T13:07:15.099Z",
+    "updated_at": "2024-08-31T13:07:15.099Z",
+    "image": "photos/IMG_5710_0j63zOO.jpg",
+    "caption": "Brow",
+    "author": 7,
+    "album": null,
+    "is_public": true,
+    "token": "25e242e1-8dc7-4b1b-b75d-862fcda308ea",
+    "favorite_users": [
+      7
+    ]
+  }
+},
+{
+  "model": "webapp.album",
+  "pk": 2,
+  "fields": {
+    "created_at": "2024-08-31T08:51:53.833Z",
+    "updated_at": "2024-08-31T08:51:53.833Z",
+    "title": "Party",
+    "description": "",
+    "author": 1,
+    "is_public": true,
+    "favorite_users": []
+  }
+},
+{
+  "model": "webapp.album",
+  "pk": 3,
+  "fields": {
+    "created_at": "2024-08-31T10:46:21.463Z",
+    "updated_at": "2024-08-31T10:46:21.463Z",
+    "title": "The Origin",
+    "description": "",
+    "author": 1,
+    "is_public": true,
+    "favorite_users": [
+      1
+    ]
+  }
+},
+{
+  "model": "webapp.album",
+  "pk": 4,
+  "fields": {
+    "created_at": "2024-08-31T10:48:57.280Z",
+    "updated_at": "2024-08-31T10:48:57.280Z",
+    "title": "Private",
+    "description": "",
+    "author": 1,
+    "is_public": false,
+    "favorite_users": []
+  }
+},
+{
+  "model": "webapp.album",
+  "pk": 5,
+  "fields": {
+    "created_at": "2024-08-31T13:06:02.376Z",
+    "updated_at": "2024-08-31T13:06:02.376Z",
+    "title": "Brow",
+    "description": "",
+    "author": 7,
+    "is_public": false,
+    "favorite_users": []
+  }
+},
+{
+  "model": "webapp.album",
+  "pk": 6,
+  "fields": {
+    "created_at": "2024-08-31T13:06:48.175Z",
+    "updated_at": "2024-08-31T13:06:48.175Z",
+    "title": "Brow",
+    "description": "",
+    "author": 7,
+    "is_public": true,
+    "favorite_users": []
+  }
+}
+]
