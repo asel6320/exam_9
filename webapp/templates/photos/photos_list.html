@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <br>
+<div class="container">
     <div class="row">
         {% for photo in photos %}
-            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                {% include "partial/photo_view_partial.html" %}
-            </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "partial/photo_view_partial.html" %}
+        </div>
         {% empty %}
         <div class="col-12">
-            <h2>No photos</h2>
+            <h2>No photos available</h2>
         </div>
         {% endfor %}
     </div>
+    
     {% if is_paginated %}
         {% include 'partial/pagination.html' %}
     {% endif %}
+</div>
 {% endblock %}

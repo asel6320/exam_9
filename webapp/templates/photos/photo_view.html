@@ -1,40 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% include "partial/photo_view_partial.html" %}
-    
-    <div class="liked-users px-4 py-3">
-        <h5 class="font-weight-bold">Added to Favorites By:</h5>
-        {% if photo.like_users.count > 0 %}
-            <ul class="list-unstyled">
-                {% for user in photo.like_users.all %}
-                    <li>
-                        <a href="{% url 'accounts:profile' user.pk %}" class="text-dark">
-                            {{ user.first_name }} {{ user.last_name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No users added to favorites.</p>
-        {% endif %}
-    </div>
-
-    <!-- Add to Favorites button -->
-    {% if request.user.is_authenticated %}
-        <div class="text-center my-4">
-            <button 
-                class="btn btn-primary" 
-                data-like="favorite" 
-                data-url="{% url 'webapp:add_to_favorites' 'photo' photo.pk %}"
-            >
-                {% if request.user in photo.like_users.all %}
-                    Remove from favorites
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            {% include "partial/photo_view_partial.html" %}
+            
+            {% if request.user == photo.author %}
+            <div class="text-center my-4">
+                {% if photo.access_token %}
+                <p><strong>Access link:</strong> 
+                    <a href="{% url 'webapp:token_photo_detail' token=photo.access_token %}">
+                        {{ request.build_absolute_uri|slice:"://"}}{% url 'webapp:token_photo_detail' token=photo.access_token %}
+                    </a>
+                </p>
                 {% else %}
-                    Add to favorites
+                <a href="{% url 'webapp:generate_token' pk=photo.pk %}" class="btn btn-success">Generate access link</a>
                 {% endif %}
-            </button>
+            </div>
+            {% endif %}
+            
+            {% if request.user.is_authenticated %}
+            <div class="text-center my-4">
+                <button class="btn btn-primary" data-like="favorite" 
+                        data-url="{% url 'webapp:add_to_favorites' 'photo' photo.pk %}">
+                    {% if request.user in photo.like_users.all %}
+                    Remove from favorites
+                    {% else %}
+                    Add to favorites
+                    {% endif %}
+                </button>
+            </div>
+            {% endif %}
         </div>
-    {% endif %}
-    
+    </div>
+</div>
 {% endblock %}

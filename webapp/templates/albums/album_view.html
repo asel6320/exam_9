@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <h1>{{ album.title }}</h1>
             <p>{{ album.description }}</p>
@@ -19,7 +19,6 @@
                 </div>
             {% endif %}
 
-            <!-- Add to Favorites button -->
             {% if request.user.is_authenticated %}
                 <div class="text-center my-4">
                     <button 
@@ -38,7 +37,6 @@
         </div>
     </div>
 
-    <br>
     <div class="row">
         {% for photo in photos %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -46,7 +44,7 @@
             </div>
         {% empty %}
             <div class="col-12">
-                <h2>No photos</h2>
+                <h2>No photos in this album</h2>
             </div>
         {% endfor %}
     </div>
@@ -56,3 +54,5 @@
     {% endif %}
 </div>
 {% endblock %}
+
+    

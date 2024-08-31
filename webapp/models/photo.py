@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -18,6 +20,7 @@ class Photo(CreateUpdateAbstractModel):
     album = models.ForeignKey("webapp.Album", blank=True, null=True, on_delete=models.CASCADE, related_name="album_photos", verbose_name="Album")
     is_public = models.BooleanField(default=True, verbose_name="Is Public")
     favorite_users = models.ManyToManyField(get_user_model(), related_name="favorite_photos", blank=True, verbose_name="Favorite Users")
+    token = models.UUIDField(default=uuid.uuid4, unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.pk} {self.author}"
@@ -29,7 +32,3 @@ class Photo(CreateUpdateAbstractModel):
         db_table = "photos"
         verbose_name = "Photo"
         verbose_name_plural = "Photos"
-        permissions = [
-            ("can_change_photo", "Can edit photo"),
-            ("can_delete_photo", "Can delete photo"),
-        ]

@@ -1,42 +1,48 @@
-<div class="post bg-white border rounded shadow-sm mb-4">
-    <div class="post-header py-3 px-4 d-flex align-items-center justify-content-between">
-        <div>
-            <span class="post-username font-weight-bold">
-                <a href="{% url 'accounts:profile' photo.author.pk %}" class="text-dark">
-                    {{ photo.author.first_name }} {{ photo.author.last_name }}
-                </a>
-            </span>
-        </div>
-        {% if request.user == photo.author or perms.webapp.change_photo %}
-            <div class="post-actions">
-                <a href="{% url 'webapp:photo_update' photo.pk %}" class="text-primary mx-2">
-                    <i class="bi bi-pen" title="Edit"></i>
-                </a>
-                <a href="{% url 'webapp:photo_delete' photo.pk %}" class="text-danger">
-                    <i class="bi bi-trash" title="Delete"></i>
-                </a>
-            </div>
-        {% endif %}
+<div class="card mb-4 shadow-sm" style="height: 100%;">
+    <div class="card-img-container" style="height: 250px; overflow: hidden;">
+        <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}" style="width: 100%; height: auto; object-fit: cover;">
     </div>
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ photo.caption }}</h5>
 
-    <img class="post-image img-fluid rounded-top" src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+        {% if request.user.is_authenticated %}
+        <p class="card-text mb-1">
+            <a href="{% url 'accounts:profile' photo.author.pk %}" class="text-dark">
+                {{ photo.author.first_name }} {{ photo.author.last_name }}
+            </a>
+        </p>
+        {% else %}
+        <p class="card-text mb-1">{{ photo.author.first_name }} {{ photo.author.last_name }}</p>
+        {% endif %}
 
-    <div class="post-body px-4 py-3">
-        <p class="post-caption font-weight-bold">{{ photo.caption }}</p>
-        <a href="{% url 'webapp:photo_view' photo.pk %}" class="text-primary mx-2">
-                    Detail View
-        </a>
+        <p class="card-text text-muted mb-1">{{ photo.created_at|date:"M d, Y, H:i" }}</p>
+
         {% if photo.album %}
-            <p class="post-album">
-                <strong>Album:</strong>
-                <a href="{% url 'webapp:album_view' photo.album.pk %}" class="text-info">
-                    {{ photo.album.title }}
-                </a>
-            </p>
+        <p class="card-text mb-3">
+            {% if request.user.is_authenticated %}
+            <strong>Album:</strong>
+            <a href="{% url 'webapp:album_view' photo.album.pk %}" class="text-info">
+                {{ photo.album.title }}
+            </a>
+            {% else %}
+            <strong>Album:</strong> {{ photo.album.title }}
+            {% endif %}
+        </p>
         {% endif %}
+        
+        <div class="mt-auto">
+            <a href="{% url 'webapp:photo_view' photo.pk %}" class="btn btn-primary">Detail View</a>
+        </div>
     </div>
 
-    <div class="post-footer px-4 py-2 text-muted d-flex justify-content-between">
-        <span>{{ photo.created_at|date:"M d, Y, H:i" }}</span>
+    {% if request.user == photo.author or perms.webapp.change_photo %}
+    <div class="card-footer d-flex justify-content-between">
+        <a href="{% url 'webapp:photo_update' photo.pk %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a href="{% url 'webapp:photo_delete' photo.pk %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-trash"></i> Delete
+        </a>
     </div>
+    {% endif %}
 </div>

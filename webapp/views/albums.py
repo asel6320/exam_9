@@ -1,12 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from webapp.forms import AlbumForm
 from webapp.models import Album
@@ -39,19 +34,30 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
         context['album'] = album
         return context
 
+    def get_queryset(self):
+        return Album.objects.filter(is_public=True)
 
-class AlbumUpdateView(LoginRequiredMixin, UpdateView):
+
+class AlbumUpdateView(PermissionRequiredMixin, UpdateView):
     model = Album
     template_name = "albums/album_update.html"
     fields = ['title', 'description', 'is_public']
+    permission_required = "webapp.change_album"
+
+    def has_permission(self):
+        return self.request.user == self.get_object().author or super().has_permission()
 
     def form_valid(self, form):
         return super().form_valid(form)
 
-class AlbumDeleteView(LoginRequiredMixin, DeleteView):
+class AlbumDeleteView(PermissionRequiredMixin, DeleteView):
     model = Album
     template_name = "albums/album_confirm_delete.html"
     success_url = reverse_lazy('webapp:album_view')
+    permission_required = "webapp.delete_album"
+
+    def has_permission(self):
+        return self.request.user == self.get_object().author or super().has_permission()
 
     def delete(self, request, *args, **kwargs):
         album = self.get_object()
