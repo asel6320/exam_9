@@ -7,4 +7,4 @@ from webapp.models import Album
 class AlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        fields = ["title", "description"]
+        fields = ["title", "description", "is_public"]

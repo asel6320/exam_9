@@ -1,2 +1,2 @@
-from webapp.views.photos import PhotosListView, PhotoCreateView, PhotoDetailView
-#from webapp.views.albums import AlbumsListView, AlbumCreateView
+from webapp.views.photos import PhotosListView, PhotoCreateView, PhotoDetailView, PhotoUpdateView, PhotoDeleteView
+from webapp.views.albums import AlbumDetailView, AlbumCreateView

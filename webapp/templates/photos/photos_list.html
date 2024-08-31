@@ -1,20 +1,16 @@
 {% extends "base.html" %}
 
-{% block link %}
-    {% if request.user.is_authenticated %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url "webapp:photo_create" %}">Create Photo</a>
-        </li>
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     <br>
     <div class="row">
         {% for photo in photos %}
-            {% include "partial/photo_view_partial.html" %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                {% include "partial/photo_view_partial.html" %}
+            </div>
         {% empty %}
-            <h2>No Photos</h2>
+        <div class="col-12">
+            <h2>No photos</h2>
+        </div>
         {% endfor %}
     </div>
     {% if is_paginated %}

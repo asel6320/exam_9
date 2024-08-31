@@ -1,10 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}{{ user_profile.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ user_profile.first_name }} {{ user_profile.last_name }}</h1>
+    
+    {% if is_own_profile %}
+        <h2>Your Private Albums</h2>
+        <div class="row">
+            {% for album in private_albums %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <a href="{% url 'webapp:album_view' album.pk %}">
+                            <img src="{{ album.cover_image.url }}" class="card-img-top" alt="{{ album.title }}">
+                        </a>
+                        <div class="card-body">
+                            <p class="card-text">{{ album.title }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p>No private albums.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2>Your Private Photos (Not in Albums)</h2>
+        <div class="row">
+            {% for photo in private_photos_no_album %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <a href="{% url 'webapp:photo_view' photo.pk %}">
+                            <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
+                        </a>
+                        <div class="card-body">
+                            <p class="card-text">{{ photo.caption }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p>No private photos.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="#" class="btn btn-primary">View Favorites</a>
+    {% endif %}
+
+    <h2>Public Albums</h2>
+    <div class="row">
+        {% for album in public_albums %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">{{ album.title }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p>No public albums.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <h2>Public Photos (Not in Albums)</h2>
+    <div class="row">
+        {% for photo in public_photos_no_album %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <a href="{% url 'webapp:photo_view' photo.pk %}">
+                        <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.caption }}">
+                    </a>
+                    <div class="card-body">
+                        <p class="card-text">{{ photo.caption }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>No public photos.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

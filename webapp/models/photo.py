@@ -16,6 +16,7 @@ class Photo(CreateUpdateAbstractModel):
     caption = models.CharField(max_length=200, verbose_name="Caption")
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="photos", verbose_name="Author")
     album = models.ForeignKey("webapp.Album", blank=True, null=True, on_delete=models.CASCADE, related_name="album_photos", verbose_name="Album")
+    is_public = models.BooleanField(default=True, verbose_name="Is Public")
     like_users = models.ManyToManyField(get_user_model(), related_name="like_photos", verbose_name="Likes")
 
     def __str__(self):

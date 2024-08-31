@@ -31,3 +31,22 @@ class PhotoDetailView(LoginRequiredMixin, DetailView):
     queryset = Photo.objects.all()
     template_name = "photos/photo_view.html"
 
+class PhotoUpdateView(PermissionRequiredMixin, UpdateView):
+    model = Photo
+    form_class = PhotoForm
+    template_name = "photos/photo_update.html"
+    permission_required = "webapp.change_photo"
+
+    def has_permission(self):
+        return self.request.user == self.get_object().author or super().has_permission()
+
+
+class PhotoDeleteView(PermissionRequiredMixin, DeleteView):
+    model = Photo
+    template_name = "photos/photo_delete.html"
+
+    def has_permission(self):
+        return self.request.user == self.get_object().author
+
+    def get_success_url(self):
+        return reverse("accounts:profile", kwargs={"pk": self.request.user.pk})

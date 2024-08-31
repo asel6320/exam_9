@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>Do you really want to delete this photo?</h3>
+    <form action="" method="post">
+        {% csrf_token %}
+        <button>Yes</button>
+    </form>
+    <a href="{% url "webapp:photo_view" photo.pk %} ">No</a>
+{% endblock %}

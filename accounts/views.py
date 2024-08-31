@@ -11,6 +11,7 @@ from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView, ListView
 
 from accounts.forms import MyUserCreationForm
+from webapp.models import Album, Photo
 
 
 class RegisterView(CreateView):
@@ -31,11 +32,31 @@ class RegisterView(CreateView):
             next_url = reverse('webapp:index')
         return next_url
 
-
 class ProfileView(DetailView):
     model = get_user_model()
-    template_name = "profile.html"
-    context_object_name = "user_obj"
+    template_name = 'profile.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_profile = self.object
+
+        public_albums = Album.objects.filter(author=user_profile, is_public=True)
+        public_photos_no_album = Photo.objects.filter(author=user_profile, is_public=True, album__isnull=True)
+
+        if self.request.user == user_profile:
+            private_albums = Album.objects.filter(author=user_profile, is_public=False)
+            private_photos_no_album = Photo.objects.filter(author=user_profile, is_public=False, album__isnull=True)
+            context['private_albums'] = private_albums
+            context['private_photos_no_album'] = private_photos_no_album
+            context['is_own_profile'] = True
+        else:
+            context['is_own_profile'] = False
+
+        context['public_albums'] = public_albums
+        context['public_photos_no_album'] = public_photos_no_album
+
+        return context
 
 
 
