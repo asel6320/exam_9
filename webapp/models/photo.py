@@ -21,8 +21,8 @@ class Photo(CreateUpdateAbstractModel):
     def __str__(self):
         return f"{self.pk} {self.author}"
 
-    # def get_absolute_url(self):
-    #     return reverse("webapp:photo_view", kwargs={"pk": self.pk})
+    def get_absolute_url(self):
+        return reverse("webapp:photo_view", kwargs={"pk": self.pk})
 
     class Meta:
         db_table = "photos"

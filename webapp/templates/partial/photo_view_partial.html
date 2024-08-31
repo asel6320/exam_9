@@ -1,0 +1,26 @@
+<div class="post bg-white border rounded">
+    <div class="post-header py-3 px-4 d-flex align-items-center">
+            <span class="post-username font-weight-bold"><a href="{% url 'accounts:profile' photo.author.pk %}">
+                        {{ photo.author.username }}</a>
+                    </span>
+            {% if request.user == photo.author or perms.webapp.change_photo %}
+                <a href="#">Edit</a>
+            {% endif %}
+    </div>
+    <img class="post-image img-fluid" src="{{ photo.image.url }}" alt="Post Image">
+    <div class="post-actions py-2 px-4">
+
+        {% if request.user.is_authenticated %}
+            <a href="#" class="btn btn-transparent" data-like="like">
+                {% if request.user in photo.like_users.all %}<i class="bi bi-heart-fill"></i>{% else %}<i class="bi bi-heart"></i>{% endif %}
+            </a>
+            {% endif %}
+        <span id="like-count" class="font-weight-bold">{{ photo.like_users.count }}</span>
+        <span class="post-comment-btn me-2"><i class="bi bi-chat-dots-fill"></i></span>
+    </div>
+    <div class="post-description px-4 py-3">
+        <p>{{ photo.caption }}</p>
+    </div>
+    <div class="post-timestamp px-4 py-2 text-muted">{{ photo.created_at }}</div>
+
+</div>

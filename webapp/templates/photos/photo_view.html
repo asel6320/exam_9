@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block link %}
+    {% if request.user == photo.author %}
+        <li class="nav-item">
+            <a href="#" class="nav-link">Редактирование</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Удаление</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% include "partial/photo_view_partial.html" %}
+
+{% endblock %}
