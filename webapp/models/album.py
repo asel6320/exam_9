@@ -10,6 +10,7 @@ class Album(CreateUpdateAbstractModel):
     description = models.TextField(max_length=2000, blank=True, null=True, verbose_name='Description')
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="albums", verbose_name="Author")
     is_public = models.BooleanField(default=True, verbose_name="Is Public")
+    favorite_users = models.ManyToManyField(get_user_model(), related_name="favorite_albums", blank=True, verbose_name="Favorite Users")
 
     def __str__(self):
         return self.title

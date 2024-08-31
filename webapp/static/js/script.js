@@ -1,19 +1,21 @@
 async function makeRequest(url, method = "GET") {
-    let csrfToken = await getCookie('csrftoken')
-    let headers = {}
+    let csrfToken = await getCookie('csrftoken');
+    let headers = {
+        'Content-Type': 'application/json'
+    };
     if (method !== "GET") {
-        headers['X-CSRFToken'] = csrfToken
+        headers['X-CSRFToken'] = csrfToken;
     }
-    let response = await fetch(url,
-        {
-            "method": method,
-            "headers": headers,
-        }
-    );
+
+    let response = await fetch(url, {
+        method: method,
+        headers: headers,
+    });
+
     if (response.ok) {
         return await response.json();
     } else {
-        let error = new Error(response.text);
+        let error = new Error(await response.text());
         console.log(error);
         throw error;
     }
@@ -21,32 +23,33 @@ async function makeRequest(url, method = "GET") {
 
 async function onClick(event) {
     event.preventDefault();
-    let a = event.currentTarget;
-    let url = a.href;
-    let icon = a.querySelector('i');
-    let isLiked = icon.classList.contains('bi-heart-fill');
-    let method = isLiked ? "DELETE" : "POST";
+    let button = event.currentTarget;
+    let url = button.dataset.url;
+    let isFavorite = button.classList.contains('favorite');
 
-    let response = await makeRequest(url, method);
+    let method = isFavorite ? "DELETE" : "POST";
 
-    // Toggle the icon class
-    if (isLiked) {
-        icon.classList.remove('bi-heart-fill');
-        icon.classList.add('bi-heart');
-    } else {
-        icon.classList.remove('bi-heart');
-        icon.classList.add('bi-heart-fill');
+    try {
+        let response = await makeRequest(url, method);
+
+        if (isFavorite) {
+            button.classList.remove('favorite');
+            button.innerText = 'Add to favorites';
+        } else {
+            button.classList.add('favorite');
+            button.innerText = 'Remove from favorites';
+        }
+
+
+    } catch (error) {
+        console.error("Error updating favorites:", error);
     }
-
-    // Update like count
-    let span = a.parentElement.querySelector("#like-count");
-    span.innerText = response.like_count;
 }
 
 function onLoad() {
-    let links = document.querySelectorAll('[data-like="like"]');
-    for (let link of links) {
-        link.addEventListener("click", onClick);
+    let buttons = document.querySelectorAll('[data-like="favorite"]');
+    for (let button of buttons) {
+        button.addEventListener("click", onClick);
     }
 }
 
@@ -56,7 +59,6 @@ function getCookie(name) {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;

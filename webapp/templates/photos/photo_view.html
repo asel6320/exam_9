@@ -2,6 +2,7 @@
 
 {% block content %}
     {% include "partial/photo_view_partial.html" %}
+    
     <div class="liked-users px-4 py-3">
         <h5 class="font-weight-bold">Added to Favorites By:</h5>
         {% if photo.like_users.count > 0 %}
@@ -18,5 +19,22 @@
             <p>No users added to favorites.</p>
         {% endif %}
     </div>
+
+    <!-- Add to Favorites button -->
+    {% if request.user.is_authenticated %}
+        <div class="text-center my-4">
+            <button 
+                class="btn btn-primary" 
+                data-like="favorite" 
+                data-url="{% url 'webapp:add_to_favorites' 'photo' photo.pk %}"
+            >
+                {% if request.user in photo.like_users.all %}
+                    Remove from favorites
+                {% else %}
+                    Add to favorites
+                {% endif %}
+            </button>
+        </div>
+    {% endif %}
     
 {% endblock %}

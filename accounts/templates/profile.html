@@ -12,12 +12,7 @@
             {% for album in private_albums %}
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card">
-                        <a href="{% url 'webapp:album_view' album.pk %}">
-                            <img src="{{ album.cover_image.url }}" class="card-img-top" alt="{{ album.title }}">
-                        </a>
-                        <div class="card-body">
-                            <p class="card-text">{{ album.title }}</p>
-                        </div>
+                        <a href="{% url 'webapp:album_view' album.pk %}">{{ album.title }}</a>
                     </div>
                 </div>
             {% empty %}
@@ -53,12 +48,10 @@
     <h2>Public Albums</h2>
     <div class="row">
         {% for album in public_albums %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <p class="card-text">{{ album.title }}</p>
+                        <a href="{% url 'webapp:album_view' album.pk %}">{{ album.title }}</a>
                     </div>
-                </div>
             {% empty %}
                 <div class="col-12">
                     <p>No public albums.</p>

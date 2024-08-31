@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Confirm Deletion</h4>
+        <p>Are you sure you want to delete the album "<strong>{{ object.title }}</strong>"?</p>
+        <p>This action cannot be undone. All photos in this album will also be deleted.</p>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'webapp:album_view' object.pk %}" class="btn btn-secondary">Cancel</a>
+        <form action="{% url 'webapp:album_delete' object.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Album</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

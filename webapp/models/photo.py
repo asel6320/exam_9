@@ -17,7 +17,7 @@ class Photo(CreateUpdateAbstractModel):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="photos", verbose_name="Author")
     album = models.ForeignKey("webapp.Album", blank=True, null=True, on_delete=models.CASCADE, related_name="album_photos", verbose_name="Album")
     is_public = models.BooleanField(default=True, verbose_name="Is Public")
-    like_users = models.ManyToManyField(get_user_model(), related_name="like_photos", verbose_name="Likes")
+    favorite_users = models.ManyToManyField(get_user_model(), related_name="favorite_photos", blank=True, verbose_name="Favorite Users")
 
     def __str__(self):
         return f"{self.pk} {self.author}"
@@ -29,3 +29,7 @@ class Photo(CreateUpdateAbstractModel):
         db_table = "photos"
         verbose_name = "Photo"
         verbose_name_plural = "Photos"
+        permissions = [
+            ("can_change_photo", "Can edit photo"),
+            ("can_delete_photo", "Can delete photo"),
+        ]
