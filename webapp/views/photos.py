@@ -1,6 +1,7 @@
 import uuid
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
@@ -19,19 +20,36 @@ class PhotosListView(ListView):
 
 
 class PhotoCreateView(LoginRequiredMixin, CreateView):
+    model = Photo
     form_class = PhotoForm
-    template_name = "photos/photo_create.html"
+    template_name = 'photos/photo_create.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-class PhotoDetailView(LoginRequiredMixin, DetailView):
-    queryset = Photo.objects.all()
-    template_name = "photos/photo_view.html"
+    def get_success_url(self):
+        return reverse('webapp:photo_view', kwargs={'pk': self.object.pk})
 
-    def get_queryset(self):
-        return Photo.objects.filter(is_public=True)
+class PhotoDetailView(LoginRequiredMixin, DetailView):
+    model = Photo
+    template_name = 'photos/photo_view.html'
+
+    def get_object(self, queryset=None):
+        photo = get_object_or_404(Photo, pk=self.kwargs['pk'])
+        if not photo.is_public and self.request.user != photo.author:
+            raise Http404("No Photo found matching the query")
+        return photo
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user == self.object.author
+        return context
 
 class PhotoUpdateView(PermissionRequiredMixin, UpdateView):
     model = Photo

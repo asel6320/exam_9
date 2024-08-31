@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12">
             {% include "partial/photo_view_partial.html" %}
-            
+
             {% if request.user == photo.author %}
             <div class="text-center my-4">
                 {% if photo.access_token %}
@@ -19,7 +19,7 @@
                 {% endif %}
             </div>
             {% endif %}
-            
+
             {% if request.user.is_authenticated %}
             <div class="text-center my-4">
                 <button class="btn btn-primary" data-like="favorite" 
@@ -32,6 +32,17 @@
                 </button>
             </div>
             {% endif %}
+            
+            <div class="my-4">
+                <h4>Users who have favorited this photo:</h4>
+                <ul>
+                    {% for user in favorite_users %}
+                        <li><a href="{% url 'accounts:profile' user.pk %}">{{ user.get_full_name }}</a></li>
+                    {% empty %}
+                        <li>No users have favorited this photo yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 </div>
